@@ -1,0 +1,40 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    display: flex;
+    justify-content: center;
+}
+.games{
+    margin: 100px;
+    display: flex;
+    justify-content: center;
+}
+#the_snake{
+    border: 10px rgb(0, 255, 255) solid;
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    padding: 10px;
+}
+.image{
+    height: 300px;
+    width: auto;
+}
+#music{
+    height: 80px;
+    width: 80px;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    border: 7px #ff0089 solid;
+    border-radius: 50%;
+    background-color: black;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

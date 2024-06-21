@@ -1,5 +1,6 @@
 'use strict'
 let ground = document.getElementById('ground');
+let audio = document.getElementById('audio');
 for (let y = 1; y <= 20; y++){
     for(let x = 1; x <= 20; x++){
         let cell = document.createElement('div');
@@ -11,12 +12,16 @@ for (let y = 1; y <= 20; y++){
     }
 }
 
-function render(snake){
+function render(snake, apple){
     for (let y = 1; y <= 20; y++){
         for(let x = 1; x <= 20; x++){
             if (snake.indexOf(String(x) + ' ' + String(y)) != -1){
                 let cell_snake = document.getElementById(String(x) + ' ' + String(y));
                 cell_snake.style.backgroundColor = 'red';
+            }
+            else if (apple == (String(x) + ' ' + String(y))){
+                let cell_apple = document.getElementById(String(x) + ' ' + String(y));
+                cell_apple.style.backgroundColor = 'green';
             }
             else{
                 let cell_empty = document.getElementById(String(x) + ' ' + String(y));
@@ -26,10 +31,15 @@ function render(snake){
     }
 }
 
-function Game(snake, status, id, direction){
+function Game(snake, status, id){
     let x_first = Number(snake[0].split(' ')[0]);
     let y_first = Number(snake[0].split(' ')[1]);
-    snake.pop();
+    if (apple != (x_first + ' ' + y_first))snake.pop();
+    else{
+        while(snake.indexOf(apple) != -1){
+            apple = Math.floor(Math.random() * (20 - 1) + 1) + ' ' + Math.floor(Math.random() * (20 - 1) + 1);
+        }
+    }
     if (direction == 'down'){
         snake.unshift(x_first + ' ' + (y_first + 1));
         direction_status = 0;
@@ -51,16 +61,36 @@ function Game(snake, status, id, direction){
     if (x_first < 1 || x_first > 20 || y_first < 1 || y_first > 20 ) status = 0;
     if (status == 0) {
         clearInterval(id);
-        return 0;
+        game_begin_btn.style.display = 'block';
+        audio.pause();
+        game_begin_btn.onclick = (event) =>{
+            snake = ['1 3', '1 2', '1 1'];
+            direction = 'down';
+            direction_status = 0;
+            id = setInterval(()=> {Game(snake, 1, id, apple)},500);
+            game_begin_btn.style.display = 'none';
+            render(snake, apple);
+            audio.play();
+        }
     }
-    render(snake);
+    render(snake, apple);
 }
 
 let snake = ['1 3', '1 2', '1 1'];
-render(snake);
+let apple = '1 1';
+while(snake.indexOf(apple) != -1){
+    apple = Math.floor(Math.random() * (20 - 1) + 1) + ' ' + Math.floor(Math.random() * (20 - 1) + 1);
+}
+render(snake, apple);
+
 let direction = 'down';
 let direction_status = 0;
-let id = setInterval(()=> {Game(snake, 1, id, direction)},500);
+let game_begin_btn = document.getElementById('open_window');
+game_begin_btn.onclick = (event) =>{
+    let id = setInterval(()=> {Game(snake, 1, id, apple)},500);
+    game_begin_btn.style.display = 'none';
+    audio.play();
+}
 document.addEventListener("keydown", function(event){
     if (event.code == "ArrowRight" && direction_status == 0) {
         direction = 'right';

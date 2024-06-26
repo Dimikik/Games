@@ -21,3 +21,7 @@ let game_snake = document.getElementById("the_snake");
 game_snake.onclick = (event) => {
     window.location.href = '../Snake/index.html';
 }
+let game_tetris = document.getElementById("the_tetris");
+game_tetris.onclick = (event) => {
+    window.location.href = '../Tetris/index.html';
+}

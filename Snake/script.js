@@ -39,6 +39,7 @@ function Game(snake, status, id){
         while(snake.indexOf(apple) != -1){
             apple = Math.floor(Math.random() * (20 - 1) + 1) + ' ' + Math.floor(Math.random() * (20 - 1) + 1);
         }
+        points++;
     }
     if (direction == 'down'){
         snake.unshift(x_first + ' ' + (y_first + 1));
@@ -58,10 +59,21 @@ function Game(snake, status, id){
     }
     x_first = Number(snake[0].split(' ')[0]);
     y_first = Number(snake[0].split(' ')[1]);
+    let copy = structuredClone(snake);
+    copy.shift();
     if (x_first < 1 || x_first > 20 || y_first < 1 || y_first > 20 ) status = 0;
+    if (copy.indexOf(x_first + ' ' + y_first) != -1) status = 0;
+    points_in_the_corner.textContent = `Очки: ${points}`;
     if (status == 0) {
         clearInterval(id);
         game_begin_btn.style.display = 'block';
+        game_begin_btn.innerHTML = '';
+        let points_elem = document.createElement('h2');
+        points_elem.className = 'points'
+        points_elem.textContent = `Очки: ${points}`;
+        console.log(points);
+        points = 0;
+        game_begin_btn.appendChild(points_elem);
         audio.pause();
         game_begin_btn.onclick = (event) =>{
             snake = ['1 3', '1 2', '1 1'];
@@ -69,6 +81,7 @@ function Game(snake, status, id){
             direction_status = 0;
             id = setInterval(()=> {Game(snake, 1, id, apple)},500);
             game_begin_btn.style.display = 'none';
+            points_in_the_corner.textContent = `Очки: ${points}`;
             render(snake, apple);
             audio.play();
         }
@@ -83,6 +96,8 @@ while(snake.indexOf(apple) != -1){
 }
 render(snake, apple);
 
+let points = 0;
+let points_in_the_corner = document.getElementById('points');
 let direction = 'down';
 let direction_status = 0;
 let game_begin_btn = document.getElementById('open_window');
